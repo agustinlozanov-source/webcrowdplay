@@ -347,67 +347,7 @@
       background: var(--border);
     }
 
-    /* ── LAPTOP MOCKUP ── */
-    .hero-mockup {
-      margin-top: 60px;
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
-      animation: fadeUp 0.8s 0.35s ease both;
-    }
 
-    .laptop-frame {
-      width: 100%;
-      position: relative;
-      perspective: 1200px;
-    }
-
-    .laptop-screen {
-      background: #000;
-      border: 12px solid #1c1c1e;
-      border-radius: 16px 16px 0 0;
-      padding: 0;
-      box-shadow: 0 0 0 2px #2c2c2e;
-      position: relative;
-      overflow: hidden;
-      aspect-ratio: 16 / 10;
-      transform-origin: bottom center;
-      transition: transform 0.5s ease;
-    }
-
-    .laptop-screen img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top;
-      display: block;
-    }
-
-    .laptop-base {
-      background: #2c2c2e;
-      height: 16px;
-      border-radius: 0 0 16px 16px;
-      position: relative;
-      width: 104%;
-      left: -2%;
-      z-index: 2;
-      box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.2), 0 30px 60px rgba(94, 23, 235, 0.4);
-    }
-
-    .laptop-base::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 0 0 6px 6px;
-    }
 
     /* ── SCROLL INDICATOR ── */
     .scroll-hint {
@@ -1510,15 +1450,6 @@
       </a>
     </div>
 
-    <!-- MOCKUP LAPTOP -->
-    <div class="hero-mockup">
-      <div class="laptop-frame">
-        <div class="laptop-screen">
-          <img src="mockup-app.png" alt="Panel DJ Reversable de CrowdPlay">
-        </div>
-        <div class="laptop-base"></div>
-      </div>
-    </div>
 
     <div class="hero-stats">
       <div class="hero-stat">
