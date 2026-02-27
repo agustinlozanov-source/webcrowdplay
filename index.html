@@ -1,923 +1,2076 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CrowdPlay — La Rockola que Conecta tu Bar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700;1,900&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CrowdPlay — La Rockola que Conecta tu Bar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700;1,900&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-:root {
-  --black:   #08090d;
-  --dark:    #0f1118;
-  --card:    #161922;
-  --border:  rgba(255,255,255,0.08);
-  --red:     #e8362a;
-  --red-glow:rgba(232,54,42,0.35);
-  --amber:   #f0b429;
-  --green:   #1fd670;
-  --indigo:  #5b6ef5;
-  --white:   #f0f2ff;
-  --muted:   #6b7280;
-}
+    :root {
+      --black: #08090d;
+      --dark: #0f1118;
+      --card: #161922;
+      --border: rgba(255, 255, 255, 0.08);
+      --red: #5e17eb;
+      --red-glow: rgba(94, 23, 235, 0.35);
+      --amber: #ff5757;
+      --green: #1fd670;
+      --indigo: #8c52ff;
+      --white: #f0f2ff;
+      --muted: #6b7280;
+    }
 
-html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-body {
-  font-family: 'Barlow', sans-serif;
-  background: var(--black);
-  color: var(--white);
-  overflow-x: hidden;
-}
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+    }
 
-/* ── NOISE OVERLAY ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 0; opacity: 0.4;
-}
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
 
-/* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 48px;
-  background: rgba(8,9,13,0.85);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-}
-.nav-logo {
-  display: flex; align-items: center; gap: 8px;
-  height: 40px;
-}
-.nav-logo img {
-  height: 40px; width: auto;
-  object-fit: contain;
-}
-.nav-links { display: flex; align-items: center; gap: 32px; }
-.nav-links a {
-  font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.1em; color: var(--muted); text-decoration: none;
-  transition: color 0.2s;
-}
-.nav-links a:hover { color: var(--white); }
-.nav-cta {
-  background: var(--red); color: white !important;
-  padding: 10px 22px; border-radius: 8px;
-  font-size: 0.78rem !important; font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-  transition: all 0.2s !important;
-  box-shadow: 0 0 20px var(--red-glow);
-}
-.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 28px var(--red-glow) !important; }
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(8, 9, 13, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
 
-/* ── HERO ── */
-#hero {
-  min-height: 100vh;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center;
-  padding: 120px 24px 80px;
-  position: relative;
-  overflow: hidden;
-}
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 40px;
+    }
 
-.hero-bg {
-  position: absolute; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(232,54,42,0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(91,110,245,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 20% 60%, rgba(240,180,41,0.06) 0%, transparent 60%);
-}
+    .nav-logo img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+    }
 
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(232,54,42,0.1); border: 1px solid rgba(232,54,42,0.25);
-  border-radius: 100px; padding: 6px 16px;
-  font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 0.14em; color: var(--red);
-  margin-bottom: 28px; position: relative; z-index: 1;
-  animation: fadeUp 0.6s ease forwards;
-}
-.hero-eyebrow::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--red); animation: pulse 1.5s infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
 
-h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(4rem, 12vw, 9rem);
-  line-height: 0.9; letter-spacing: 0.02em;
-  position: relative; z-index: 1;
-  animation: fadeUp 0.6s 0.1s ease both;
-}
-h1 em {
-  font-style: normal; color: var(--red);
-  text-shadow: 0 0 60px var(--red-glow);
-}
-h1 .line2 { display: block; color: rgba(240,242,255,0.25); }
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
 
-.hero-sub {
-  max-width: 580px; margin: 24px auto 0;
-  font-size: clamp(1rem, 2.5vw, 1.2rem); font-weight: 400;
-  color: rgba(240,242,255,0.55); line-height: 1.6;
-  position: relative; z-index: 1;
-  animation: fadeUp 0.6s 0.2s ease both;
-}
+    .nav-links a:hover {
+      color: var(--white);
+    }
 
-.hero-actions {
-  display: flex; align-items: center; gap: 16px; margin-top: 40px;
-  position: relative; z-index: 1; flex-wrap: wrap; justify-content: center;
-  animation: fadeUp 0.6s 0.3s ease both;
-}
-.btn-demo {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: var(--red); color: white;
-  padding: 16px 36px; border-radius: 12px; text-decoration: none;
-  font-size: 1rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
-  box-shadow: 0 0 40px var(--red-glow);
-  transition: all 0.25s;
-}
-.btn-demo:hover { transform: translateY(-3px); box-shadow: 0 8px 50px var(--red-glow); }
-.btn-demo svg { transition: transform 0.2s; }
-.btn-demo:hover svg { transform: translateX(4px); }
+    .nav-cta {
+      background: #5e17eb;
+      color: white !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 0.78rem !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.08em !important;
+      transition: all 0.2s !important;
+      box-shadow: 0 0 20px rgba(140, 82, 255, 0.35);
+    }
 
-.btn-ghost {
-  display: inline-flex; align-items: center; gap: 8px;
-  color: var(--muted); text-decoration: none;
-  font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  transition: color 0.2s;
-}
-.btn-ghost:hover { color: var(--white); }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 28px rgba(140, 82, 255, 0.5) !important;
+    }
 
-.hero-stats {
-  display: flex; align-items: center; gap: 40px; margin-top: 64px;
-  position: relative; z-index: 1;
-  animation: fadeUp 0.6s 0.4s ease both;
-  flex-wrap: wrap; justify-content: center;
-}
-.hero-stat { text-align: center; }
-.hero-stat-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.4rem; color: var(--white); letter-spacing: 0.04em; line-height: 1;
-}
-.hero-stat-num span { color: var(--red); }
-.hero-stat-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-top: 4px; }
-.hero-divider { width: 1px; height: 40px; background: var(--border); }
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
 
-/* ── SCROLL INDICATOR ── */
-.scroll-hint {
-  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  color: var(--muted); font-size: 0.62rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.14em; z-index: 1;
-  animation: fadeUp 0.6s 0.6s ease both;
-}
-.scroll-hint svg { animation: bounce 2s infinite; }
-@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(94, 23, 235, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(140, 82, 255, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 20% 60%, rgba(255, 87, 87, 0.06) 0%, transparent 60%);
+    }
 
-/* ── SECTIONS ── */
-section { padding: 100px 24px; position: relative; z-index: 1; }
-.container { max-width: 1080px; margin: 0 auto; }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(94, 23, 235, 0.1);
+      border: 1px solid rgba(94, 23, 235, 0.25);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--red);
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.6s ease forwards;
+    }
 
-.section-label {
-  font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 0.18em; color: var(--red); margin-bottom: 16px;
-}
-.section-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(2.4rem, 6vw, 4.5rem);
-  line-height: 0.95; letter-spacing: 0.02em;
-  color: var(--white);
-}
-.section-title em { font-style: normal; color: var(--red); }
-.section-sub {
-  font-size: 1rem; color: rgba(240,242,255,0.5);
-  line-height: 1.6; max-width: 520px; margin-top: 16px;
-}
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      animation: pulse 1.5s infinite;
+    }
 
-/* ── PAIN SECTION ── */
-#pain { background: var(--dark); }
-.pain-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2px; margin-top: 56px;
-}
-.pain-card {
-  background: var(--card); padding: 36px 32px;
-  position: relative; overflow: hidden;
-  transition: transform 0.2s;
-}
-.pain-card:hover { transform: translateY(-4px); }
-.pain-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 5rem; color: rgba(232,54,42,0.08);
-  line-height: 1; position: absolute; top: 12px; right: 20px;
-}
-.pain-icon {
-  width: 44px; height: 44px; border-radius: 12px;
-  background: rgba(232,54,42,0.1); border: 1px solid rgba(232,54,42,0.2);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 20px;
-}
-.pain-title { font-size: 1.1rem; font-weight: 800; color: var(--white); margin-bottom: 10px; }
-.pain-desc { font-size: 0.88rem; color: rgba(240,242,255,0.45); line-height: 1.6; }
+    @keyframes pulse {
 
-/* ── HOW IT WORKS ── */
-#how { position: relative; }
-#how::before {
-  content: '';
-  position: absolute; left: 50%; top: 0; bottom: 0;
-  width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
-  transform: translateX(-50%);
-}
-.steps { display: flex; flex-direction: column; gap: 0; margin-top: 64px; }
-.step {
-  display: grid; grid-template-columns: 1fr 80px 1fr;
-  align-items: center; gap: 0; min-height: 140px;
-}
-.step-content {
-  padding: 32px 48px 32px 0; text-align: right;
-}
-.step.reverse .step-content { padding: 32px 0 32px 48px; text-align: left; order: 3; }
-.step.reverse .step-empty { order: 1; }
-.step-num-wrap {
-  display: flex; align-items: center; justify-content: center;
-  position: relative; z-index: 2;
-}
-.step-num {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: var(--black); border: 2px solid var(--red);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--red);
-  box-shadow: 0 0 20px var(--red-glow);
-}
-.step-label {
-  font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 0.14em; color: var(--red); margin-bottom: 8px;
-}
-.step-title { font-size: 1.15rem; font-weight: 800; color: var(--white); margin-bottom: 8px; }
-.step-desc { font-size: 0.85rem; color: rgba(240,242,255,0.45); line-height: 1.6; }
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
 
-/* ── FEATURES ── */
-#features { background: var(--dark); }
-.features-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2px; margin-top: 56px;
-}
-.feat-card {
-  background: var(--card); padding: 32px;
-  border-top: 2px solid transparent;
-  transition: all 0.25s; cursor: default;
-  position: relative; overflow: hidden;
-}
-.feat-card::after {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at top left, rgba(232,54,42,0.06), transparent 60%);
-  opacity: 0; transition: opacity 0.3s;
-}
-.feat-card:hover { border-top-color: var(--red); }
-.feat-card:hover::after { opacity: 1; }
-.feat-icon {
-  width: 48px; height: 48px; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 18px; font-size: 1.4rem;
-}
-.feat-title { font-size: 1rem; font-weight: 800; color: var(--white); margin-bottom: 8px; }
-.feat-desc { font-size: 0.85rem; color: rgba(240,242,255,0.45); line-height: 1.6; }
-.feat-tag {
-  display: inline-block; margin-top: 14px;
-  font-size: 0.6rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 0.1em; padding: 3px 10px; border-radius: 100px;
-}
+      50% {
+        opacity: 0.5;
+        transform: scale(1.3)
+      }
+    }
 
-/* ── RIFFS SECTION ── */
-#riffs {
-  background: linear-gradient(135deg, #0f0d08 0%, var(--black) 50%, #080a0f 100%);
-  position: relative; overflow: hidden;
-}
-#riffs::before {
-  content: 'RIFFS';
-  position: absolute; right: -40px; top: 50%; transform: translateY(-50%);
-  font-family: 'Bebas Neue', sans-serif; font-size: 18rem;
-  color: rgba(240,180,41,0.03); line-height: 1; pointer-events: none;
-  white-space: nowrap;
-}
-.riffs-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-.riffs-packs { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
-.riffs-pack {
-  display: flex; align-items: center; gap: 16px;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 18px 22px;
-  transition: all 0.2s; cursor: default;
-}
-.riffs-pack:hover { border-color: rgba(240,180,41,0.3); transform: translateX(6px); }
-.pack-riffs {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2rem; color: var(--amber); letter-spacing: 0.04em;
-  min-width: 80px;
-}
-.pack-info { flex: 1; }
-.pack-name { font-size: 0.88rem; font-weight: 800; color: var(--white); }
-.pack-price { font-size: 0.72rem; font-weight: 600; color: var(--muted); margin-top: 2px; }
-.pack-badge {
-  font-size: 0.6rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 0.1em; background: rgba(240,180,41,0.1);
-  color: var(--amber); border: 1px solid rgba(240,180,41,0.25);
-  padding: 3px 10px; border-radius: 100px;
-}
-.riffs-uses { display: flex; flex-direction: column; gap: 10px; margin-top: 28px; }
-.riffs-use {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px; border-radius: 10px;
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-}
-.use-action { font-size: 0.85rem; font-weight: 600; color: rgba(240,242,255,0.7); }
-.use-cost {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.1rem; letter-spacing: 0.04em;
-}
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
 
-/* ── PRICING ── */
-#pricing { background: var(--dark); }
-.pricing-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2px; margin-top: 56px; align-items: stretch;
-}
-.pricing-card {
-  background: var(--card); padding: 36px 32px;
-  position: relative; overflow: hidden; display: flex; flex-direction: column;
-  transition: transform 0.2s;
-}
-.pricing-card:hover { transform: translateY(-6px); }
-.pricing-card.featured {
-  background: linear-gradient(135deg, #1a1124, #141020);
-  border: 1px solid rgba(91,110,245,0.3);
-  box-shadow: 0 0 60px rgba(91,110,245,0.1);
-}
-.pricing-badge {
-  position: absolute; top: 0; right: 32px;
-  background: var(--indigo); color: white;
-  font-size: 0.6rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 0.12em; padding: 5px 14px;
-  border-radius: 0 0 10px 10px;
-}
-.pricing-name { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 12px; }
-.pricing-price {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 3.5rem; color: var(--white); line-height: 1; letter-spacing: 0.02em;
-}
-.pricing-price sup { font-size: 1.5rem; vertical-align: super; }
-.pricing-price sub { font-size: 1rem; color: var(--muted); font-family: 'Barlow', sans-serif; font-weight: 600; }
-.pricing-desc { font-size: 0.82rem; color: var(--muted); margin: 10px 0 24px; line-height: 1.5; }
-.pricing-features { flex: 1; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
-.pricing-feature {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 0.82rem; color: rgba(240,242,255,0.65);
-}
-.pricing-feature::before {
-  content: '✓'; color: var(--green); font-weight: 800; flex-shrink: 0;
-}
-.pricing-feature.no { color: var(--muted); }
-.pricing-feature.no::before { content: '—'; color: var(--muted); }
-.btn-plan {
-  display: block; text-align: center; text-decoration: none;
-  padding: 13px; border-radius: 10px;
-  font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
-  transition: all 0.2s;
-}
-.btn-plan-outline {
-  border: 1px solid var(--border); color: var(--muted);
-  background: transparent;
-}
-.btn-plan-outline:hover { border-color: var(--red); color: var(--white); }
-.btn-plan-filled {
-  background: var(--indigo); color: white;
-  box-shadow: 0 0 30px rgba(91,110,245,0.3);
-}
-.btn-plan-filled:hover { transform: translateY(-2px); box-shadow: 0 6px 40px rgba(91,110,245,0.4); }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, #5e17eb, #8c52ff, #ff5757);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 30px rgba(140, 82, 255, 0.4));
+    }
 
-/* ── DEMO CTA ── */
-#cta {
-  text-align: center; padding: 120px 24px;
-  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(232,54,42,0.1), transparent 70%);
-  position: relative; overflow: hidden;
-}
-#cta::before {
-  content: 'CROWDPLAY';
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
-  font-family: 'Bebas Neue', sans-serif; font-size: 20rem;
-  color: rgba(232,54,42,0.03); white-space: nowrap; pointer-events: none;
-}
-.cta-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3rem, 8vw, 6rem);
-  line-height: 0.95; letter-spacing: 0.02em;
-  position: relative; z-index: 1;
-}
-.cta-title em { font-style: normal; color: var(--red); }
-.cta-sub {
-  font-size: 1.05rem; color: rgba(240,242,255,0.45);
-  margin: 20px auto 40px; max-width: 480px; line-height: 1.6;
-  position: relative; z-index: 1;
-}
-.cta-disclaimer {
-  font-size: 0.72rem; color: var(--muted); margin-top: 20px;
-  position: relative; z-index: 1;
-}
+    h1 .line2 {
+      display: block;
+      color: rgba(240, 242, 255, 0.25);
+    }
 
-/* ── FOOTER ── */
-footer {
-  background: var(--dark); border-top: 1px solid var(--border);
-  padding: 48px 24px; text-align: center;
-}
-.footer-logo {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  margin-bottom: 12px;
-}
-.footer-logo img {
-  height: 32px; width: auto;
-  object-fit: contain;
-}
-.footer-tagline { font-size: 0.8rem; color: var(--muted); margin-bottom: 28px; }
-.footer-links { display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
-.footer-links a { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); text-decoration: none; transition: color 0.2s; }
-.footer-links a:hover { color: var(--white); }
-.footer-copy { font-size: 0.72rem; color: rgba(107,114,128,0.5); }
+    .hero-sub {
+      max-width: 580px;
+      margin: 24px auto 0;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-weight: 400;
+      color: rgba(240, 242, 255, 0.55);
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
 
-/* ── ANIMATIONS ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.reveal {
-  opacity: 0; transform: translateY(32px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 40px;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
 
-/* ── TICKER ── */
-.ticker-wrap {
-  background: var(--red); padding: 14px 0; overflow: hidden;
-  position: relative; z-index: 1;
-}
-.ticker {
-  display: flex; gap: 0;
-  animation: ticker 20s linear infinite;
-  white-space: nowrap;
-}
-.ticker-item {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1rem; letter-spacing: 0.1em; color: white;
-  padding: 0 32px; opacity: 0.9;
-}
-.ticker-sep { opacity: 0.4; }
-@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .btn-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #5e17eb;
+      color: white;
+      padding: 16px 36px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 0 40px rgba(140, 82, 255, 0.35);
+      transition: all 0.25s;
+    }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  nav { padding: 14px 20px; }
-  .nav-links { display: none; }
-  .nav-links.mobile-show { display: flex; flex-direction: column; position: fixed; inset: 60px 0 0; background: var(--dark); padding: 24px; }
-  .step { grid-template-columns: 40px 1fr; }
-  .step-content { text-align: left !important; padding: 24px 0 24px 20px !important; order: 2 !important; }
-  .step-empty { display: none; }
-  #how::before { display: none; }
-  .step-num-wrap { order: 1; }
-  .riffs-layout { grid-template-columns: 1fr; gap: 40px; }
-  #riffs::before { display: none; }
-}
-</style>
+    .btn-demo:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 50px rgba(140, 82, 255, 0.5);
+    }
+
+    .btn-demo svg {
+      transition: transform 0.2s;
+    }
+
+    .btn-demo:hover svg {
+      transform: translateX(4px);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .btn-ghost:hover {
+      color: var(--white);
+    }
+
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-top: 64px;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.6s 0.4s ease both;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      color: var(--white);
+      letter-spacing: 0.04em;
+      line-height: 1;
+    }
+
+    .hero-stat-num span {
+      color: var(--red);
+    }
+
+    .hero-stat-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .hero-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--border);
+    }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      z-index: 1;
+      animation: fadeUp 0.6s 0.6s ease both;
+    }
+
+    .scroll-hint svg {
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(6px)
+      }
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 100px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: var(--white);
+    }
+
+    .section-title em {
+      font-style: normal;
+      color: var(--red);
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: rgba(240, 242, 255, 0.5);
+      line-height: 1.6;
+      max-width: 520px;
+      margin-top: 16px;
+    }
+
+    /* ── PAIN SECTION ── */
+    #pain {
+      background: var(--dark);
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2px;
+      margin-top: 56px;
+    }
+
+    .pain-card {
+      background: var(--card);
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+
+    .pain-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .pain-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      color: rgba(94, 23, 235, 0.15);
+      line-height: 1;
+      position: absolute;
+      top: 12px;
+      right: 20px;
+    }
+
+    .pain-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(94, 23, 235, 0.1);
+      border: 1px solid rgba(94, 23, 235, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .pain-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .pain-desc {
+      font-size: 0.88rem;
+      color: rgba(240, 242, 255, 0.45);
+      line-height: 1.6;
+    }
+
+    /* ── HOW IT WORKS ── */
+    #how {
+      position: relative;
+    }
+
+    #how::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--border), transparent);
+      transform: translateX(-50%);
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 64px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      align-items: center;
+      gap: 0;
+      min-height: 140px;
+    }
+
+    .step-content {
+      padding: 32px 48px 32px 0;
+      text-align: right;
+    }
+
+    .step.reverse .step-content {
+      padding: 32px 0 32px 48px;
+      text-align: left;
+      order: 3;
+    }
+
+    .step.reverse .step-empty {
+      order: 1;
+    }
+
+    .step-num-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-num {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--black);
+      border: 2px solid var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--red);
+      box-shadow: 0 0 20px var(--red-glow);
+    }
+
+    .step-label {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .step-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .step-desc {
+      font-size: 0.85rem;
+      color: rgba(240, 242, 255, 0.45);
+      line-height: 1.6;
+    }
+
+    /* ── FEATURES ── */
+    #features {
+      background: var(--dark);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2px;
+      margin-top: 56px;
+    }
+
+    .feat-card {
+      background: var(--card);
+      padding: 32px;
+      border-top: 2px solid transparent;
+      transition: all 0.25s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feat-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top left, rgba(94, 23, 235, 0.06), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feat-card:hover {
+      border-top-color: var(--red);
+    }
+
+    .feat-card:hover::after {
+      opacity: 1;
+    }
+
+    .feat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      font-size: 1.4rem;
+    }
+
+    .feat-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .feat-desc {
+      font-size: 0.85rem;
+      color: rgba(240, 242, 255, 0.45);
+      line-height: 1.6;
+    }
+
+    .feat-tag {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    /* ── RIFFS SECTION ── */
+    #riffs {
+      background: linear-gradient(135deg, #0f0d08 0%, var(--black) 50%, #080a0f 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #riffs::before {
+      content: 'RIFFS';
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18rem;
+      color: rgba(255, 87, 87, 0.03);
+      line-height: 1;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .riffs-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .riffs-packs {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .riffs-pack {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 22px;
+      transition: all 0.2s;
+      cursor: default;
+    }
+
+    .riffs-pack:hover {
+      border-color: rgba(255, 87, 87, 0.3);
+      transform: translateX(6px);
+    }
+
+    .pack-riffs {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--amber);
+      letter-spacing: 0.04em;
+      min-width: 80px;
+    }
+
+    .pack-info {
+      flex: 1;
+    }
+
+    .pack-name {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .pack-price {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .pack-badge {
+      font-size: 0.6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: rgba(255, 87, 87, 0.1);
+      color: var(--amber);
+      border: 1px solid rgba(255, 87, 87, 0.25);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    .riffs-uses {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .riffs-use {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+    }
+
+    .use-action {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(240, 242, 255, 0.7);
+    }
+
+    .use-cost {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── PRICING CARDS ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2px;
+      margin-top: 56px;
+      margin-bottom: 80px;
+      align-items: stretch;
+    }
+
+    .pricing-card {
+      background: var(--card);
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .pricing-card.featured {
+      background: linear-gradient(135deg, #1a1124, #141020);
+      border: 1px solid rgba(140, 82, 255, 0.3);
+      box-shadow: 0 0 60px rgba(140, 82, 255, 0.1);
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: 0;
+      right: 32px;
+      background: var(--indigo);
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 5px 14px;
+      border-radius: 0 0 10px 10px;
+    }
+
+    .pricing-name {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .pricing-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+
+    .pricing-price sup {
+      font-size: 1.5rem;
+      vertical-align: super;
+    }
+
+    .pricing-price sub {
+      font-size: 1rem;
+      color: var(--muted);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 600;
+    }
+
+    .pricing-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin: 10px 0 24px;
+      line-height: 1.5;
+    }
+
+    .pricing-features {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .pricing-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: rgba(240, 242, 255, 0.65);
+    }
+
+    .pricing-feature::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .pricing-feature.no {
+      color: var(--muted);
+    }
+
+    .pricing-feature.no::before {
+      content: '—';
+      color: var(--muted);
+    }
+
+    .btn-plan {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+    }
+
+    .btn-plan-outline {
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: transparent;
+    }
+
+    .btn-plan-outline:hover {
+      border-color: var(--red);
+      color: var(--white);
+    }
+
+    .btn-plan-filled {
+      background: var(--indigo);
+      color: white;
+      box-shadow: 0 0 30px rgba(140, 82, 255, 0.3);
+    }
+
+    .btn-plan-filled:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 40px rgba(140, 82, 255, 0.4);
+    }
+
+    /* ── PRICING TABLE ── */
+    #pricing {
+      background: var(--dark);
+      padding: 120px 24px;
+    }
+
+    .pricing-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 56px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--card);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .pricing-table {
+      width: 100%;
+      min-width: 900px;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+
+    .pricing-table th,
+    .pricing-table td {
+      border: 1px solid var(--border);
+      padding: 16px 12px;
+      vertical-align: middle;
+    }
+
+    .pricing-table th {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 24px 12px;
+    }
+
+    .col-features {
+      text-align: left !important;
+      width: 250px;
+      font-weight: 800;
+      color: var(--white);
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .plan-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .plan-price {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .row-category td {
+      text-align: left;
+      background: rgba(255, 255, 255, 0.03);
+      font-weight: 800;
+      color: var(--white);
+      padding: 12px 16px;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .feature-name {
+      text-align: left !important;
+      color: rgba(240, 242, 255, 0.7);
+      font-weight: 600;
+      padding-left: 16px !important;
+    }
+
+    .pricing-table td:not(.feature-name) {
+      color: var(--white);
+    }
+
+    .pricing-table .yes {
+      color: var(--green);
+      margin: 0 auto;
+      display: block;
+    }
+
+    .pricing-table .no {
+      color: #ff5757;
+      margin: 0 auto;
+      display: block;
+    }
+
+    .plan-trial .plan-name {
+      color: var(--green);
+    }
+
+    .plan-basico .plan-name {
+      color: var(--white);
+    }
+
+    .plan-pro .plan-name {
+      color: #f09af6;
+    }
+
+    .plan-business .plan-name {
+      color: #f97316;
+    }
+
+    .plan-enterprise .plan-name {
+      color: #3b82f6;
+    }
+
+    .plan-corporativo .plan-name {
+      color: #ff5757;
+    }
+
+    /* ── DEMO CTA ── */
+    #cta {
+      text-align: center;
+      padding: 120px 24px;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(94, 23, 235, 0.15), transparent 70%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #cta::before {
+      content: 'CROWDPLAY';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20rem;
+      color: rgba(94, 23, 235, 0.05);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-title em {
+      font-style: normal;
+      color: var(--red);
+    }
+
+    .cta-sub {
+      font-size: 1.05rem;
+      color: rgba(240, 242, 255, 0.45);
+      margin: 20px auto 40px;
+      max-width: 480px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-disclaimer {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .footer-logo img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .footer-tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .footer-links a {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--white);
+    }
+
+    .footer-copy {
+      font-size: 0.72rem;
+      color: rgba(107, 114, 128, 0.5);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      background: var(--red);
+      padding: 14px 0;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ticker {
+      display: flex;
+      gap: 0;
+      animation: ticker 20s linear infinite;
+      white-space: nowrap;
+    }
+
+    .ticker-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      color: white;
+      padding: 0 32px;
+      opacity: 0.9;
+    }
+
+    .ticker-sep {
+      opacity: 0.4;
+    }
+
+    @keyframes ticker {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav {
+        padding: 14px 20px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-links.mobile-show {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        inset: 60px 0 0;
+        background: var(--dark);
+        padding: 24px;
+      }
+
+      .step {
+        grid-template-columns: 40px 1fr;
+      }
+
+      .step-content {
+        text-align: left !important;
+        padding: 24px 0 24px 20px !important;
+        order: 2 !important;
+      }
+
+      .step-empty {
+        display: none;
+      }
+
+      #how::before {
+        display: none;
+      }
+
+      .step-num-wrap {
+        order: 1;
+      }
+
+      .riffs-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      #riffs::before {
+        display: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo"><img src="logo.png" alt="CrowdPlay"></div>
-  <div class="nav-links">
-    <a href="#how">Cómo funciona</a>
-    <a href="#features">Funciones</a>
-    <a href="#riffs">Riffs</a>
-    <a href="#pricing">Precios</a>
-    <a href="#cta" class="nav-cta">Probar Demo</a>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-bg"></div>
-
-  <div class="hero-eyebrow">La rockola del siglo XXI ya llegó</div>
-
-  <h1>
-    Tu bar<br>
-    <em>conectado</em><br>
-    <span class="line2">al máximo</span>
-  </h1>
-
-  <p class="hero-sub">
-    CrowdPlay convierte la experiencia pasiva de escuchar música en un juego social donde tus clientes permanecen más tiempo, consumen más y vuelven.
-  </p>
-
-  <div class="hero-actions">
-    <a href="#" class="btn-demo">
-      Probar demo gratis
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-    </a>
-    <a href="#how" class="btn-ghost">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16 10,8"/></svg>
-      Ver cómo funciona
-    </a>
-  </div>
-
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="hero-stat-num">+<span>40</span>min</div>
-      <div class="hero-stat-label">más tiempo en bar</div>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo"><img src="logo.png" alt="CrowdPlay"></div>
+    <div class="nav-links">
+      <a href="#how">Cómo funciona</a>
+      <a href="#features">Funciones</a>
+      <a href="#riffs">Riffs</a>
+      <a href="#pricing">Precios</a>
+      <a href="#cta" class="nav-cta">Probar Demo</a>
     </div>
-    <div class="hero-divider"></div>
-    <div class="hero-stat">
-      <div class="hero-stat-num"><span>3</span>x</div>
-      <div class="hero-stat-label">más canciones pedidas</div>
-    </div>
-    <div class="hero-divider"></div>
-    <div class="hero-stat">
-      <div class="hero-stat-num"><span>0</span></div>
-      <div class="hero-stat-label">hardware requerido</div>
-    </div>
-    <div class="hero-divider"></div>
-    <div class="hero-stat">
-      <div class="hero-stat-num"><span>30</span>seg</div>
-      <div class="hero-stat-label">para que el cliente entre</div>
-    </div>
-  </div>
+  </nav>
 
-  <div class="scroll-hint">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
-    Descubre más
-  </div>
-</section>
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
 
-<!-- TICKER -->
-<div class="ticker-wrap">
-  <div class="ticker">
-    <span class="ticker-item">Cola en tiempo real</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Sistema de Riffs</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Karaoke integrado</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Chat entre mesas</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Sin app que descargar</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Panel DJ profesional</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Banners en TV</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Analytics en tiempo real</span><span class="ticker-item ticker-sep">·</span>
-    <!-- duplicate for seamless loop -->
-    <span class="ticker-item">Cola en tiempo real</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Sistema de Riffs</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Karaoke integrado</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Chat entre mesas</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Sin app que descargar</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Panel DJ profesional</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Banners en TV</span><span class="ticker-item ticker-sep">·</span>
-    <span class="ticker-item">Analytics en tiempo real</span><span class="ticker-item ticker-sep">·</span>
-  </div>
-</div>
+    <div class="hero-eyebrow">La rockola del siglo XXI ya llegó</div>
 
-<!-- PAIN -->
-<section id="pain">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">El problema</div>
-      <h2 class="section-title">Tu rockola actual<br><em>está rota</em></h2>
-      <p class="section-sub">No es el hardware. Es la experiencia. Tu bar merece más que una caja negra que nadie controla.</p>
-    </div>
-    <div class="pain-grid reveal reveal-delay-1">
-      <div class="pain-card">
-        <div class="pain-num">01</div>
-        <div class="pain-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e8362a" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        </div>
-        <div class="pain-title">Nadie sabe cuándo suena su canción</div>
-        <div class="pain-desc">Tus clientes piden y esperan en silencio. Sin visibilidad, sin expectativa, sin emoción. La experiencia muere ahí.</div>
-      </div>
-      <div class="pain-card">
-        <div class="pain-num">02</div>
-        <div class="pain-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e8362a" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        </div>
-        <div class="pain-title">Cada mesa vive en su burbuja</div>
-        <div class="pain-desc">No hay conexión entre grupos. Un bar lleno de burbujas individuales es un bar a punto de vaciarse.</div>
-      </div>
-      <div class="pain-card">
-        <div class="pain-num">03</div>
-        <div class="pain-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e8362a" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-        </div>
-        <div class="pain-title">Cero datos, cero decisiones</div>
-        <div class="pain-desc">No sabes qué música funciona, qué mesas consumen más ni cuándo se va la gente. Administras a ciegas.</div>
-      </div>
-    </div>
-  </div>
-</section>
+    <h1>
+      Tu bar<br>
+      <em>conectado</em><br>
+      <span class="line2">al máximo</span>
+    </h1>
 
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="container">
-    <div class="reveal" style="text-align:center;">
-      <div class="section-label">Cómo funciona</div>
-      <h2 class="section-title">Simple para todos.<br><em>Poderoso</em> por dentro.</h2>
-    </div>
-    <div class="steps">
-      <div class="step reveal">
-        <div class="step-content">
-          <div class="step-label">Paso 1</div>
-          <div class="step-title">El cliente escanea el QR de su mesa</div>
-          <div class="step-desc">Sin descargar ninguna app. En 30 segundos está dentro, con su nombre y perfil creado para siempre.</div>
-        </div>
-        <div class="step-num-wrap"><div class="step-num">1</div></div>
-        <div class="step-empty"></div>
-      </div>
-      <div class="step reverse reveal">
-        <div class="step-empty"></div>
-        <div class="step-num-wrap"><div class="step-num">2</div></div>
-        <div class="step-content">
-          <div class="step-label">Paso 2</div>
-          <div class="step-title">Pide canciones, vota, sube su Riffs</div>
-          <div class="step-desc">Busca en el catálogo infinito de YouTube, agrega dedicatorias y ve la cola en vivo desde su celular.</div>
-        </div>
-      </div>
-      <div class="step reveal">
-        <div class="step-content">
-          <div class="step-label">Paso 3</div>
-          <div class="step-title">El DJ controla todo desde su panel</div>
-          <div class="step-desc">Play, pausa, skip, cola editable, dedicatorias en TV. Control total sin tocar hardware ni sentarse detrás de una computadora.</div>
-        </div>
-        <div class="step-num-wrap"><div class="step-num">3</div></div>
-        <div class="step-empty"></div>
-      </div>
-      <div class="step reverse reveal">
-        <div class="step-empty"></div>
-        <div class="step-num-wrap"><div class="step-num">4</div></div>
-        <div class="step-content">
-          <div class="step-label">Paso 4</div>
-          <div class="step-title">Las mesas se conectan entre sí</div>
-          <div class="step-desc">Retos de karaoke, invitaciones a cantar, dedicatorias públicas. El ambiente lo crea tu clientela — CrowdPlay solo enciende la chispa.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    <p class="hero-sub">
+      CrowdPlay convierte la experiencia pasiva de escuchar música en un juego social donde tus clientes permanecen más
+      tiempo, consumen más y vuelven.
+    </p>
 
-<!-- FEATURES -->
-<section id="features">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-label">Funciones</div>
-      <h2 class="section-title">Todo lo que necesitas.<br><em>Nada</em> de lo que no.</h2>
-    </div>
-    <div class="features-grid">
-
-      <div class="feat-card reveal reveal-delay-1">
-        <div class="feat-icon" style="background:rgba(31,214,112,0.1);border:1px solid rgba(31,214,112,0.2);">🎵</div>
-        <div class="feat-title">Cola en tiempo real</div>
-        <div class="feat-desc">Todos ven la cola, la posición de su canción y el tiempo estimado. Transparencia total que genera anticipación.</div>
-        <span class="feat-tag" style="background:rgba(31,214,112,0.1);color:#1fd670;border:1px solid rgba(31,214,112,0.2);">Disponible</span>
-      </div>
-
-      <div class="feat-card reveal reveal-delay-2">
-        <div class="feat-icon" style="background:rgba(232,54,42,0.1);border:1px solid rgba(232,54,42,0.2);">🎤</div>
-        <div class="feat-title">Karaoke integrado</div>
-        <div class="feat-desc">Búsqueda de pistas de karaoke sin salir de la app. Tus clientes cantan, el bar vibra.</div>
-        <span class="feat-tag" style="background:rgba(31,214,112,0.1);color:#1fd670;border:1px solid rgba(31,214,112,0.2);">Disponible</span>
-      </div>
-
-      <div class="feat-card reveal reveal-delay-3">
-        <div class="feat-icon" style="background:rgba(91,110,245,0.1);border:1px solid rgba(91,110,245,0.2);">🎛️</div>
-        <div class="feat-title">Panel DJ profesional</div>
-        <div class="feat-desc">Play, pausa, seek, cola con drag & drop, dedicatorias en TV y control de banners. Todo desde una tablet.</div>
-        <span class="feat-tag" style="background:rgba(31,214,112,0.1);color:#1fd670;border:1px solid rgba(31,214,112,0.2);">Disponible</span>
-      </div>
-
-      <div class="feat-card reveal reveal-delay-1">
-        <div class="feat-icon" style="background:rgba(240,180,41,0.1);border:1px solid rgba(240,180,41,0.2);">🏆</div>
-        <div class="feat-title">Sistema de Riffs</div>
-        <div class="feat-desc">Moneda interna para gamificar la noche. Los clientes compran Riffs, los ganan por participar y los usan para priorizar su música.</div>
-        <span class="feat-tag" style="background:rgba(31,214,112,0.1);color:#1fd670;border:1px solid rgba(31,214,112,0.2);">Disponible</span>
-      </div>
-
-      <div class="feat-card reveal reveal-delay-2">
-        <div class="feat-icon" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);">💬</div>
-        <div class="feat-title">Chat entre mesas</div>
-        <div class="feat-desc">Disparadores rápidos: invitar a cantar, retar a karaoke, felicitar el performance. El bar se convierte en una fiesta de desconocidos.</div>
-        <span class="feat-tag" style="background:rgba(240,180,41,0.1);color:#f0b429;border:1px solid rgba(240,180,41,0.2);">Próximamente</span>
-      </div>
-
-      <div class="feat-card reveal reveal-delay-3">
-        <div class="feat-icon" style="background:rgba(232,54,42,0.1);border:1px solid rgba(232,54,42,0.2);">📊</div>
-        <div class="feat-title">Analytics del negocio</div>
-        <div class="feat-desc">Canciones más pedidas, horarios pico, mesas más activas, revenue por Riffs. Datos reales para decisiones reales.</div>
-        <span class="feat-tag" style="background:rgba(240,180,41,0.1);color:#f0b429;border:1px solid rgba(240,180,41,0.2);">Próximamente</span>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- RIFFS -->
-<section id="riffs">
-  <div class="container">
-    <div class="riffs-layout">
-      <div class="reveal">
-        <div class="section-label">Gamificación</div>
-        <h2 class="section-title">Los Riffs:<br><em>el arma</em><br>secreta.</h2>
-        <p class="section-sub" style="margin-top:16px;">Una moneda interna que convierte cada noche en un juego. Tus clientes compran, ganan y gastan Riffs — sin sacar la tarjeta, sin apps de pago.</p>
-
-        <div class="riffs-uses" style="margin-top:32px;">
-          <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:4px;">Úsalos para:</div>
-          <div class="riffs-use">
-            <span class="use-action">↑ Subir 1 lugar en la cola</span>
-            <span class="use-cost" style="color:var(--amber);">15R</span>
-          </div>
-          <div class="riffs-use">
-            <span class="use-action">🎯 Pasar al Top 3</span>
-            <span class="use-cost" style="color:var(--amber);">40R</span>
-          </div>
-          <div class="riffs-use">
-            <span class="use-action">⚡ Siguiente canción</span>
-            <span class="use-cost" style="color:var(--red);">70R</span>
-          </div>
-          <div class="riffs-use">
-            <span class="use-action">💌 Dedicatoria especial</span>
-            <span class="use-cost" style="color:var(--amber);">10R</span>
-          </div>
-          <div class="riffs-use">
-            <span class="use-action">⚔️ Reto de karaoke</span>
-            <span class="use-cost" style="color:var(--indigo);">10R</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="reveal reveal-delay-2">
-        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:16px;">Packs disponibles:</div>
-        <div class="riffs-packs">
-          <div class="riffs-pack">
-            <div class="pack-riffs">80R</div>
-            <div class="pack-info">
-              <div class="pack-name">Pack Chico</div>
-              <div class="pack-price">$100 MXN</div>
-            </div>
-          </div>
-          <div class="riffs-pack">
-            <div class="pack-riffs">180R</div>
-            <div class="pack-info">
-              <div class="pack-name">Pack Medio</div>
-              <div class="pack-price">$200 MXN</div>
-            </div>
-            <div class="pack-badge">Popular</div>
-          </div>
-          <div class="riffs-pack">
-            <div class="pack-riffs">300R</div>
-            <div class="pack-info">
-              <div class="pack-name">Pack Grande</div>
-              <div class="pack-price">$300 MXN</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top:24px;padding:20px;background:rgba(240,180,41,0.05);border:1px solid rgba(240,180,41,0.15);border-radius:14px;">
-          <div style="font-size:0.72rem;font-weight:800;color:var(--amber);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">¿Cómo se compran?</div>
-          <div style="font-size:0.85rem;color:rgba(240,242,255,0.5);line-height:1.6;">El cliente se los pide al mesero. Se cargan a su cuenta de la noche y se cobran al final junto con la comida y las bebidas. Sin pagos digitales. Sin complicaciones.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section id="pricing">
-  <div class="container">
-    <div class="reveal" style="text-align:center;">
-      <div class="section-label">Precios</div>
-      <h2 class="section-title">Empieza gratis.<br><em>Escala</em> cuando quieras.</h2>
-      <p class="section-sub" style="margin:16px auto 0;">30 días de trial sin costo. Sin tarjeta. Sin permanencia.</p>
-    </div>
-    <div class="pricing-grid reveal reveal-delay-1">
-
-      <div class="pricing-card">
-        <div class="pricing-name">Básico</div>
-        <div class="pricing-price"><sup>$</sup>499<sub>/mes</sub></div>
-        <div class="pricing-desc">Para bares que quieren modernizar su rockola sin complicaciones.</div>
-        <div class="pricing-features">
-          <div class="pricing-feature">Cola de canciones en tiempo real</div>
-          <div class="pricing-feature">Panel DJ básico</div>
-          <div class="pricing-feature">TV Display fullscreen</div>
-          <div class="pricing-feature">Búsqueda YouTube ilimitada</div>
-          <div class="pricing-feature no">Sistema de Riffs</div>
-          <div class="pricing-feature no">Chat entre mesas</div>
-          <div class="pricing-feature no">Analytics</div>
-        </div>
-        <a href="#cta" class="btn-plan btn-plan-outline">Empezar trial</a>
-      </div>
-
-      <div class="pricing-card featured">
-        <div class="pricing-badge">Más popular</div>
-        <div class="pricing-name">Pro</div>
-        <div class="pricing-price"><sup>$</sup>999<sub>/mes</sub></div>
-        <div class="pricing-desc">La experiencia CrowdPlay completa. Gamificación, social y datos.</div>
-        <div class="pricing-features">
-          <div class="pricing-feature">Todo lo de Básico</div>
-          <div class="pricing-feature">Sistema de Riffs completo</div>
-          <div class="pricing-feature">Chat entre mesas</div>
-          <div class="pricing-feature">Banners en TV</div>
-          <div class="pricing-feature">Panel DJ avanzado</div>
-          <div class="pricing-feature">Analytics básico</div>
-          <div class="pricing-feature no">Multi-sala</div>
-        </div>
-        <a href="#cta" class="btn-plan btn-plan-filled">Empezar trial</a>
-      </div>
-
-      <div class="pricing-card">
-        <div class="pricing-name">Enterprise</div>
-        <div class="pricing-price" style="font-size:2.2rem;">A consultar</div>
-        <div class="pricing-desc">Para cadenas de bares, hoteles y espacios con múltiples salas.</div>
-        <div class="pricing-features">
-          <div class="pricing-feature">Todo lo de Pro</div>
-          <div class="pricing-feature">Multi-sala</div>
-          <div class="pricing-feature">Analytics avanzado</div>
-          <div class="pricing-feature">Soporte prioritario</div>
-          <div class="pricing-feature">Configuración a medida</div>
-          <div class="pricing-feature">SLA garantizado</div>
-          <div class="pricing-feature">Integración Spotify</div>
-        </div>
-        <a href="#cta" class="btn-plan btn-plan-outline">Contactar</a>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- CTA FINAL -->
-<section id="cta">
-  <div class="container" style="position:relative;z-index:1;">
-    <div class="reveal">
-      <div class="cta-title">Tu bar en<br><em>5 minutos.</em></div>
-      <p class="cta-sub">Sin hardware. Sin instalaciones. Sin contratos. Solo entra a la demo y ve por ti mismo lo que CrowdPlay hace por tu negocio.</p>
-      <a href="#" class="btn-demo" style="display:inline-flex;">
-        Probar demo gratis ahora
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+    <div class="hero-actions">
+      <a href="#" class="btn-demo">
+        Probar demo gratis
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12,5 19,12 12,19" />
+        </svg>
       </a>
-      <p class="cta-disclaimer">30 días gratis · Sin tarjeta · Cancela cuando quieras</p>
+      <a href="#how" class="btn-ghost">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="10,8 16,12 10,16 10,8" />
+        </svg>
+        Ver cómo funciona
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">+<span>40</span>min</div>
+        <div class="hero-stat-label">más tiempo en bar</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num"><span>3</span>x</div>
+        <div class="hero-stat-label">más canciones pedidas</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num"><span>0</span></div>
+        <div class="hero-stat-label">hardware requerido</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-num"><span>30</span>seg</div>
+        <div class="hero-stat-label">para que el cliente entre</div>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2">
+        <polyline points="6,9 12,15 18,9" />
+      </svg>
+      Descubre más
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="ticker-item">Cola en tiempo real</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Sistema de Riffs</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Karaoke integrado</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Chat entre mesas</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Sin app que descargar</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Panel DJ profesional</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Banners en TV</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Analytics en tiempo real</span><span class="ticker-item ticker-sep">·</span>
+      <!-- duplicate for seamless loop -->
+      <span class="ticker-item">Cola en tiempo real</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Sistema de Riffs</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Karaoke integrado</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Chat entre mesas</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Sin app que descargar</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Panel DJ profesional</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Banners en TV</span><span class="ticker-item ticker-sep">·</span>
+      <span class="ticker-item">Analytics en tiempo real</span><span class="ticker-item ticker-sep">·</span>
     </div>
   </div>
-</section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo"><img src="logo.png" alt="CrowdPlay"></div>
-  <div class="footer-tagline">Donde la música conecta personas.</div>
-  <div class="footer-links">
-    <a href="#how">Cómo funciona</a>
-    <a href="#features">Funciones</a>
-    <a href="#riffs">Riffs</a>
-    <a href="#pricing">Precios</a>
-    <a href="#">Contacto</a>
-  </div>
-  <div class="footer-copy">© 2025 CrowdPlay · Todos los derechos reservados</div>
-</footer>
+  <!-- PAIN -->
+  <section id="pain">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">El problema</div>
+        <h2 class="section-title">Tu rockola actual<br><em>está rota</em></h2>
+        <p class="section-sub">No es el hardware. Es la experiencia. Tu bar merece más que una caja negra que nadie
+          controla.</p>
+      </div>
+      <div class="pain-grid reveal reveal-delay-1">
+        <div class="pain-card">
+          <div class="pain-num">01</div>
+          <div class="pain-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5e17eb" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </div>
+          <div class="pain-title">Nadie sabe cuándo suena su canción</div>
+          <div class="pain-desc">Tus clientes piden y esperan en silencio. Sin visibilidad, sin expectativa, sin
+            emoción. La experiencia muere ahí.</div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-num">02</div>
+          <div class="pain-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5e17eb" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+            </svg>
+          </div>
+          <div class="pain-title">Cada mesa vive en su burbuja</div>
+          <div class="pain-desc">No hay conexión entre grupos. Un bar lleno de burbujas individuales es un bar a punto
+            de vaciarse.</div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-num">03</div>
+          <div class="pain-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5e17eb" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+          </div>
+          <div class="pain-title">Cero datos, cero decisiones</div>
+          <div class="pain-desc">No sabes qué música funciona, qué mesas consumen más ni cuándo se va la gente.
+            Administras a ciegas.</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<script>
-// ── SCROLL REVEAL ──
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      observer.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.12 });
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="container">
+      <div class="reveal" style="text-align:center;">
+        <div class="section-label">Cómo funciona</div>
+        <h2 class="section-title">Simple para todos.<br><em>Poderoso</em> por dentro.</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-content">
+            <div class="step-label">Paso 1</div>
+            <div class="step-title">El cliente escanea el QR de su mesa</div>
+            <div class="step-desc">Sin descargar ninguna app. En 30 segundos está dentro, con su nombre y perfil creado
+              para siempre.</div>
+          </div>
+          <div class="step-num-wrap">
+            <div class="step-num">1</div>
+          </div>
+          <div class="step-empty"></div>
+        </div>
+        <div class="step reverse reveal">
+          <div class="step-empty"></div>
+          <div class="step-num-wrap">
+            <div class="step-num">2</div>
+          </div>
+          <div class="step-content">
+            <div class="step-label">Paso 2</div>
+            <div class="step-title">Pide canciones, vota, sube su Riffs</div>
+            <div class="step-desc">Busca en el catálogo infinito de YouTube, agrega dedicatorias y ve la cola en vivo
+              desde su celular.</div>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-content">
+            <div class="step-label">Paso 3</div>
+            <div class="step-title">El DJ controla todo desde su panel</div>
+            <div class="step-desc">Play, pausa, skip, cola editable, dedicatorias en TV. Control total sin tocar
+              hardware ni sentarse detrás de una computadora.</div>
+          </div>
+          <div class="step-num-wrap">
+            <div class="step-num">3</div>
+          </div>
+          <div class="step-empty"></div>
+        </div>
+        <div class="step reverse reveal">
+          <div class="step-empty"></div>
+          <div class="step-num-wrap">
+            <div class="step-num">4</div>
+          </div>
+          <div class="step-content">
+            <div class="step-label">Paso 4</div>
+            <div class="step-title">Las mesas se conectan entre sí</div>
+            <div class="step-desc">Retos de karaoke, invitaciones a cantar, dedicatorias públicas. El ambiente lo crea
+              tu clientela — CrowdPlay solo enciende la chispa.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Funciones</div>
+        <h2 class="section-title">Todo lo que necesitas.<br><em>Nada</em> de lo que no.</h2>
+      </div>
+      <div class="features-grid">
 
-// ── SMOOTH NAV HIGHLIGHT ──
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(s => {
-    if (window.scrollY >= s.offsetTop - 100) current = s.id;
-  });
-  navLinks.forEach(a => {
-    a.style.color = a.getAttribute('href') === '#' + current ? 'var(--white)' : '';
-  });
-});
+        <div class="feat-card reveal reveal-delay-1">
+          <div class="feat-icon"
+            style="background:rgba(31,214,112,0.1);border:1px solid rgba(31,214,112,0.2);color:#1fd670;">
+            <i data-lucide="music" width="24" height="24"></i>
+          </div>
+          <div class="feat-title">Cola en tiempo real</div>
+          <div class="feat-desc">Todos ven la cola, la posición de su canción y el tiempo estimado. Transparencia total
+            que genera anticipación.</div>
+          <span class="feat-tag"
+            style="background:rgba(31,214,112,0.1);color:#1fd670;border:1px solid rgba(31,214,112,0.2);">Disponible</span>
+        </div>
 
-// ── NAV SHADOW ON SCROLL ──
-window.addEventListener('scroll', () => {
-  document.querySelector('nav').style.boxShadow = window.scrollY > 20 ? '0 4px 30px rgba(0,0,0,0.4)' : '';
-});
-</script>
+        <div class="feat-card reveal reveal-delay-2">
+          <div class="feat-icon"
+            style="background:rgba(94,23,235,0.1);border:1px solid rgba(94,23,235,0.2);color:#5e17eb;">
+            <i data-lucide="mic" width="24" height="24"></i>
+          </div>
+          <div class="feat-title">Karaoke integrado</div>
+          <div class="feat-desc">Búsqueda de pistas de karaoke sin salir de la app. Tus clientes cantan, el bar vibra.
+          </div>
+          <span class="feat-tag"
+            style="background:rgba(31,214,112,0.1);color:#1fd670;border:1px solid rgba(31,214,112,0.2);">Disponible</span>
+        </div>
+
+        <div class="feat-card reveal reveal-delay-3">
+          <div class="feat-icon"
+            style="background:rgba(91,110,245,0.1);border:1px solid rgba(91,110,245,0.2);color:#5b6ef5;">
+            <i data-lucide="sliders" width="24" height="24"></i>
+          </div>
+          <div class="feat-title">Panel DJ profesional</div>
+          <div class="feat-desc">Play, pausa, seek, cola con drag & drop, dedicatorias en TV y control de banners. Todo
+            desde una tablet.</div>
+          <span class="feat-tag"
+            style="background:rgba(31,214,112,0.1);color:#1fd670;border:1px solid rgba(31,214,112,0.2);">Disponible</span>
+        </div>
+
+        <div class="feat-card reveal reveal-delay-1">
+          <div class="feat-icon"
+            style="background:rgba(255,87,87,0.1);border:1px solid rgba(255,87,87,0.2);color:#ff5757;">
+            <i data-lucide="trophy" width="24" height="24"></i>
+          </div>
+          <div class="feat-title">Sistema de Riffs</div>
+          <div class="feat-desc">Moneda interna para gamificar la noche. Los clientes compran Riffs, los ganan por
+            participar y los usan para priorizar su música.</div>
+          <span class="feat-tag"
+            style="background:rgba(31,214,112,0.1);color:#1fd670;border:1px solid rgba(31,214,112,0.2);">Disponible</span>
+        </div>
+
+        <div class="feat-card reveal reveal-delay-2">
+          <div class="feat-icon"
+            style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);color:#8b5cf6;">
+            <i data-lucide="message-square" width="24" height="24"></i>
+          </div>
+          <div class="feat-title">Chat entre mesas</div>
+          <div class="feat-desc">Disparadores rápidos: invitar a cantar, retar a karaoke, felicitar el performance. El
+            bar se convierte en una fiesta de desconocidos.</div>
+          <span class="feat-tag"
+            style="background:rgba(255,87,87,0.1);color:#ff5757;border:1px solid rgba(255,87,87,0.2);">Próximamente</span>
+        </div>
+
+        <div class="feat-card reveal reveal-delay-3">
+          <div class="feat-icon"
+            style="background:rgba(94,23,235,0.1);border:1px solid rgba(94,23,235,0.2);color:#5e17eb;">
+            <i data-lucide="bar-chart-2" width="24" height="24"></i>
+          </div>
+          <div class="feat-title">Analytics del negocio</div>
+          <div class="feat-desc">Canciones más pedidas, horarios pico, mesas más activas, revenue por Riffs. Datos
+            reales para decisiones reales.</div>
+          <span class="feat-tag"
+            style="background:rgba(255,87,87,0.1);color:#ff5757;border:1px solid rgba(255,87,87,0.2);">Próximamente</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- RIFFS -->
+  <section id="riffs">
+    <div class="container">
+      <div class="riffs-layout">
+        <div class="reveal">
+          <div class="section-label">Gamificación</div>
+          <h2 class="section-title">Los Riffs:<br><em>el arma</em><br>secreta.</h2>
+          <p class="section-sub" style="margin-top:16px;">Una moneda interna que convierte cada noche en un juego. Tus
+            clientes compran, ganan y gastan Riffs — sin sacar la tarjeta, sin apps de pago.</p>
+
+          <div class="riffs-uses" style="margin-top:32px;">
+            <div
+              style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:4px;">
+              Úsalos para:</div>
+            <div class="riffs-use">
+              <span class="use-action">↑ Subir 1 lugar en la cola</span>
+              <span class="use-cost" style="color:var(--amber);">15R</span>
+            </div>
+            <div class="riffs-use">
+              <span class="use-action">🎯 Pasar al Top 3</span>
+              <span class="use-cost" style="color:var(--amber);">40R</span>
+            </div>
+            <div class="riffs-use">
+              <span class="use-action">⚡ Siguiente canción</span>
+              <span class="use-cost" style="color:var(--red);">70R</span>
+            </div>
+            <div class="riffs-use">
+              <span class="use-action">💌 Dedicatoria especial</span>
+              <span class="use-cost" style="color:var(--amber);">10R</span>
+            </div>
+            <div class="riffs-use">
+              <span class="use-action">⚔️ Reto de karaoke</span>
+              <span class="use-cost" style="color:var(--indigo);">10R</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-2">
+          <div
+            style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-bottom:16px;">
+            Packs disponibles:</div>
+          <div class="riffs-packs">
+            <div class="riffs-pack">
+              <div class="pack-riffs">80R</div>
+              <div class="pack-info">
+                <div class="pack-name">Pack Chico</div>
+                <div class="pack-price">$100 MXN</div>
+              </div>
+            </div>
+            <div class="riffs-pack">
+              <div class="pack-riffs">180R</div>
+              <div class="pack-info">
+                <div class="pack-name">Pack Medio</div>
+                <div class="pack-price">$200 MXN</div>
+              </div>
+              <div class="pack-badge">Popular</div>
+            </div>
+            <div class="riffs-pack">
+              <div class="pack-riffs">300R</div>
+              <div class="pack-info">
+                <div class="pack-name">Pack Grande</div>
+                <div class="pack-price">$300 MXN</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="margin-top:24px;padding:20px;background:rgba(255,87,87,0.05);border:1px solid rgba(255,87,87,0.15);border-radius:14px;">
+            <div
+              style="font-size:0.72rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">
+              ¿Cómo se compran?</div>
+            <div style="font-size:0.85rem;color:rgba(240,242,255,0.5);line-height:1.6;">El cliente se los pide al
+              mesero. Se cargan a su cuenta de la noche y se cobran al final junto con la comida y las bebidas. Sin
+              pagos digitales. Sin complicaciones.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="container" style="max-width: 1200px;">
+      <div class="reveal" style="text-align:center;">
+        <div class="section-label">Planes y Funcionalidades</div>
+        <h2 class="section-title">Elige el plan perfecto para<br><em>tu negocio</em></h2>
+        <p class="section-sub" style="margin:16px auto 0;">Comparación detallada de todas nuestras funciones.</p>
+      </div>
+
+      <div class="pricing-grid reveal reveal-delay-1">
+        <div class="pricing-card">
+          <div class="pricing-name" style="color:var(--white);">Básico</div>
+          <div class="pricing-price"><sup>$</sup>499<sub>/mes</sub></div>
+          <div class="pricing-desc">Para bares que quieren modernizar su rockola sin complicaciones.</div>
+          <div class="pricing-features">
+            <div class="pricing-feature">Cola de canciones en tiempo real</div>
+            <div class="pricing-feature">Panel DJ profesional</div>
+            <div class="pricing-feature">Sampler DJ Ilimitado</div>
+            <div class="pricing-feature">Cintillos publicitarios (3 PNG)</div>
+            <div class="pricing-feature no">Sistema de Riffs</div>
+            <div class="pricing-feature no">Chat entre mesas</div>
+          </div>
+          <a href="#cta" class="btn-plan btn-plan-outline">Empezar trial</a>
+        </div>
+
+        <div class="pricing-card featured">
+          <div class="pricing-badge">Más popular</div>
+          <div class="pricing-name" style="color:#f09af6;">Pro</div>
+          <div class="pricing-price"><sup>$</sup>999<sub>/mes</sub></div>
+          <div class="pricing-desc">La experiencia CrowdPlay completa. Gamificación, social y métricas clave.</div>
+          <div class="pricing-features">
+            <div class="pricing-feature">Todo lo de Básico</div>
+            <div class="pricing-feature">Sistema de Riffs y Boost</div>
+            <div class="pricing-feature">Chat y dedicatorias entre mesas</div>
+            <div class="pricing-feature">Cintillos publicitarios ilimitados</div>
+            <div class="pricing-feature">Analytics completo e histórico</div>
+          </div>
+          <a href="#cta" class="btn-plan btn-plan-filled">Empezar trial</a>
+        </div>
+
+        <div class="pricing-card">
+          <div class="pricing-name" style="color:#f97316;">Business</div>
+          <div class="pricing-price"><sup>$</sup>1,499<sub>/mes</sub></div>
+          <div class="pricing-desc">Para venues con alto volumen, peticiones desde la mesa y gran staff.</div>
+          <div class="pricing-features">
+            <div class="pricing-feature">Todo lo de Pro</div>
+            <div class="pricing-feature">Hasta 10 Usuarios staff</div>
+            <div class="pricing-feature">Mesas simultáneas ilimitadas</div>
+            <div class="pricing-feature">Solicitud de mesero y alertas</div>
+            <div class="pricing-feature">Soporte prioritario WhatsApp</div>
+            <div class="pricing-feature no">Panel Multi-venue Corporativo</div>
+          </div>
+          <a href="#cta" class="btn-plan btn-plan-outline">Empezar trial</a>
+        </div>
+      </div>
+
+      <div class="pricing-table-wrapper reveal reveal-delay-2">
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th class="col-features">Función / Plan</th>
+              <th class="col-plan plan-trial">
+                <div class="plan-name">Trial</div>
+                <div class="plan-price">30 días gratis</div>
+              </th>
+              <th class="col-plan plan-basico">
+                <div class="plan-name">Básico</div>
+                <div class="plan-price">$499/mes</div>
+              </th>
+              <th class="col-plan plan-pro">
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">$999/mes</div>
+              </th>
+              <th class="col-plan plan-business">
+                <div class="plan-name">Business</div>
+                <div class="plan-price">$1,499/mes</div>
+              </th>
+              <th class="col-plan plan-enterprise">
+                <div class="plan-name">Enterprise</div>
+                <div class="plan-price">Custom</div>
+              </th>
+              <th class="col-plan plan-corporativo">
+                <div class="plan-name">Corporativo</div>
+                <div class="plan-price">Contrato</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- MÚSICA -->
+            <tr class="row-category">
+              <td colspan="7">MÚSICA</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Cola de canciones en tiempo real</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Votación de canciones</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Karaoke integrado</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Panel DJ profesional</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+
+            <!-- AMBIENTE & SHOW -->
+            <tr class="row-category">
+              <td colspan="7">AMBIENTE & SHOW</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Sampler DJ</td>
+              <td>Ilimitados <br><span style="font-size:0.7rem;color:var(--muted)">+grabar</span></td>
+              <td>Ilimitados</td>
+              <td>Ilimitados <br><span style="font-size:0.7rem;color:var(--muted)">+grabar+librería</span></td>
+              <td>Ilimitados <br><span style="font-size:0.7rem;color:var(--muted)">+grabar+librería</span></td>
+              <td>Ilimitados <br><span style="font-size:0.7rem;color:var(--muted)">+grabar+librería</span></td>
+              <td>Ilimitados <br><span style="font-size:0.7rem;color:var(--muted)">+grabar+librería</span></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Cintillos publicitarios en TV</td>
+              <td>3 / PNG+Video</td>
+              <td>3 / PNG</td>
+              <td>Ilimitados <br><span style="font-size:0.7rem;color:var(--muted)">PNG+Video+GIF</span></td>
+              <td>Ilimitados <br><span style="font-size:0.7rem;color:var(--muted)">PNG+Video+GIF</span></td>
+              <td>Ilimitados <br><span style="font-size:0.7rem;color:var(--muted)">PNG+Video+GIF</span></td>
+              <td>Ilimitados <br><span style="font-size:0.7rem;color:var(--muted)">PNG+Video+GIF</span></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Dedicatorias en pantalla</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+
+            <!-- EXPERIENCIA DEL CLIENTE -->
+            <tr class="row-category">
+              <td colspan="7">EXPERIENCIA DEL CLIENTE</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Riffs — moneda de la noche</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Boost de canciones con Riffs</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Chat social entre mesas</td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Dedicar canciones a otras mesas</td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+
+            <!-- SERVICIO DE MESA -->
+            <tr class="row-category">
+              <td colspan="7">SERVICIO DE MESA</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Solicitud de mesero y cuenta</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Seguimiento en tiempo real</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Analytics de tiempos y eficiencia</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Alertas por demora</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <!-- GESTIÓN & ANALYTICS -->
+            <tr class="row-category">
+              <td colspan="7">GESTIÓN & ANALYTICS</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Estadísticas básicas de la noche</td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Analytics completo e histórico</td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Usuarios staff</td>
+              <td>2</td>
+              <td>2</td>
+              <td>5</td>
+              <td>10</td>
+              <td>Ilimitados</td>
+              <td>Ilimitados</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Mesas simultáneas</td>
+              <td>Ilimitadas</td>
+              <td>10</td>
+              <td>Ilimitadas</td>
+              <td>Ilimitadas</td>
+              <td>Ilimitadas</td>
+              <td>Ilimitadas</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Venues incluidos</td>
+              <td>1</td>
+              <td>1</td>
+              <td>1</td>
+              <td>1</td>
+              <td>1</td>
+              <td>Ilimitados</td>
+            </tr>
+
+            <!-- MULTI-TENANT CORPORATIVO -->
+            <tr class="row-category">
+              <td colspan="7">MULTI-TENANT CORPORATIVO</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Panel corporativo multi-venue</td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Analytics consolidado de cadena</td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Branding unificado o por venue</td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">Staff compartido entre venues</td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+
+            <!-- SOPORTE & IMPLEMENTACIÓN -->
+            <tr class="row-category">
+              <td colspan="7">SOPORTE & IMPLEMENTACIÓN</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Canal de soporte</td>
+              <td>Email</td>
+              <td>Email</td>
+              <td>WhatsApp</td>
+              <td>WhatsApp Prioritario</td>
+              <td>Dedicado</td>
+              <td>Dedicado</td>
+            </tr>
+            <tr>
+              <td class="feature-name">Onboarding asistido</td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+            <tr>
+              <td class="feature-name">SLA garantizado</td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="x" class="no" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+              <td><i data-lucide="check" class="yes" width="20"></i></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- DISCLAIMER -->
+        <div
+          style="padding: 16px 24px; text-align: left; font-size: 0.75rem; color: rgba(240, 242, 255, 0.45); line-height: 1.6; border-top: 1px solid var(--border); font-style: italic;">
+          * Trial incluye acceso completo a todas las funciones por 30 días para que el venue experimente el máximo
+          valor antes de elegir plan.<br>
+          * Corporativo aplica para cadenas de 3 o más venues. Precio por contrato anual negociado directamente.
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:40px;" class="reveal reveal-delay-2">
+        <a href="#cta" class="btn-demo">Comenzar prueba gratis</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section id="cta">
+    <div class="container" style="position:relative;z-index:1;">
+      <div class="reveal">
+        <div class="cta-title">Tu bar en<br><em>5 minutos.</em></div>
+        <p class="cta-sub">Sin hardware. Sin instalaciones. Sin contratos. Solo entra a la demo y ve por ti mismo lo que
+          CrowdPlay hace por tu negocio.</p>
+        <a href="#" class="btn-demo" style="display:inline-flex;">
+          Probar demo gratis ahora
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12,5 19,12 12,19" />
+          </svg>
+        </a>
+        <p class="cta-disclaimer">30 días gratis · Sin tarjeta · Cancela cuando quieras</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo"><img src="logo.png" alt="CrowdPlay"></div>
+    <div class="footer-tagline">Donde la música conecta personas.</div>
+    <div class="footer-links">
+      <a href="#how">Cómo funciona</a>
+      <a href="#features">Funciones</a>
+      <a href="#riffs">Riffs</a>
+      <a href="#pricing">Precios</a>
+      <a href="#">Contacto</a>
+    </div>
+    <div class="footer-copy">© 2025 CrowdPlay · Todos los derechos reservados</div>
+  </footer>
+
+  <script>
+    // ── SCROLL REVEAL ──
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── SMOOTH NAV HIGHLIGHT ──
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 100) current = s.id;
+      });
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--white)' : '';
+      });
+    });
+
+    // ── NAV SHADOW ON SCROLL ──
+    window.addEventListener('scroll', () => {
+      document.querySelector('nav').style.boxShadow = window.scrollY > 20 ? '0 4px 30px rgba(0,0,0,0.4)' : '';
+    });
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>lucide.createIcons();</script>
 </body>
+
 </html>
